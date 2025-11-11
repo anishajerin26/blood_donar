@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Blood Awareness | Blood Donor Finder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./css/style.css">
+
+  <style>
+    .title {
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 25px;
+      color: #d90429;
+    }
+
+    .info-section {
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      margin-bottom: 35px;
+      animation: fadeIn .8s ease;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(12px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-danger fs-4">Blood Donor Finder</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="nav" class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="search.html">Find Donor</a></li>
+        <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
+        <li class="nav-item"><a class="nav-link" href="request.html">Emergency</a></li>
+        <li class="nav-item"><a class="nav-link active text-danger" href="awareness.html">Blood Info</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container my-5">
+
+  <h2 class="title">Blood Group Compatibility Chart</h2>
+
+  <div class="table-responsive info-section">
+    <table class="table table-bordered text-center align-middle">
+      <thead class="table-danger">
+        <tr>
+          <th>Blood Group</th>
+          <th>Can Donate To</th>
+          <th>Can Receive From</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>O-</td><td>All Blood Groups</td><td>O-</td></tr>
+        <tr><td>O+</td><td>O+, A+, B+, AB+</td><td>O+, O-</td></tr>
+        <tr><td>A-</td><td>A-, A+, AB-, AB+</td><td>A-, O-</td></tr>
+        <tr><td>A+</td><td>A+, AB+</td><td>A+, A-, O+, O-</td></tr>
+        <tr><td>B-</td><td>B-, B+, AB-, AB+</td><td>B-, O-</td></tr>
+        <tr><td>B+</td><td>B+, AB+</td><td>B+, B-, O+, O-</td></tr>
+        <tr><td>AB-</td><td>AB-, AB+</td><td>AB-, A-, B-, O-</td></tr>
+        <tr><td>AB+</td><td>Only AB+</td><td>All Blood Groups</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-section">
+    <h4 class="text-danger fw-bold">Why Donate Blood?</h4>
+    <p class="lead">Every blood donation can save up to <strong>3 lives</strong>. Donating blood is safe, simple, and takes only 15 minutes.</p>
+  </div>
+
+  <div class="info-section">
+    <h4 class="text-danger fw-bold">Quick Blood Facts</h4>
+    <ul class="lead">
+      <li>Blood cannot be manufactured — it can only come from donors.</li>
+      <li>Every 2 seconds, someone in the world needs blood.</li>
+      <li>One donor can help trauma patients, cancer patients, and children in need.</li>
+      <li>Donating blood improves your own cardiovascular health.</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer class="text-center p-3 text-muted">
+  © <span id="year"></span> Blood Donor Finder
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
