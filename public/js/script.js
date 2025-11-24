@@ -97,3 +97,104 @@ async function submitRequestForm(e) {
     showMsg('reqMsg', 'danger', data.error || 'Failed to post request.');
   }
 }
+async function updateStatus(id, status) {
+  const res = await fetch(`/api/requests/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status })
+  });
+  const data = await res.json();
+  if (data.ok) {
+    alert("Request marked as completed!");
+    location.reload();
+  }
+}
+// USER LOGIN
+async function userLogin(e) {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  const res = await fetch("/api/user/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+
+  if (data.ok) {
+    window.location.href = "index.html";
+  } else {
+    showMsg("loginMsg", "danger", data.error);
+  }
+}
+
+// USER SIGNUP
+async function userSignup(e) {
+  e.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  const res = await fetch("/api/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password })
+  });
+
+  const data = await res.json();
+
+  if (data.ok) {
+    showMsg("signupMsg", "success", "Signup successful! Redirecting...");
+    setTimeout(() => window.location.href = "user-login.html", 1500);
+  } else {
+    showMsg("signupMsg", "danger", data.error);
+  }
+}
+// -------------------- ADMIN LOGIN --------------------
+async function adminLogin(e) {
+  e.preventDefault();
+
+  const username = document.getElementById("admin_username").value.trim();
+  const password = document.getElementById("admin_password").value.trim();
+
+  const res = await fetch("/api/admin/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
+  });
+
+  const data = await res.json();
+
+  if (data.ok) {
+    // Redirect admin to homepage
+    window.location.href = "index.html";
+  } else {
+    showMsg("adminLoginMsg", "danger", data.error);
+  }
+}
+
+// -------------------- ADMIN LOGOUT --------------------
+async function adminLogout() {
+  await fetch("/api/logout");
+  window.location.href = "index.html";
+}
+async function markCompleted(id) {
+  const res = await fetch(`/api/requests/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status: "Completed" })
+  });
+
+  const data = await res.json();
+
+  if (data.ok) {
+    alert("Marked as completed!");
+    location.reload();
+  } else {
+    alert("Admin only! You are not authorized.");
+  }
+}

@@ -8,12 +8,37 @@
   <link href="./css/style.css" rel="stylesheet">
 </head>
 <body>
+  <nav class="navbar navbar-expand-lg bg-light shadow-sm">
+    <div class="container">
   
-<nav class="navbar navbar-expand-lg bg-light shadow-sm">
-  <div class="container">
-    <a class="navbar-brand" href="index.html">Blood Donor Finder</a>
-  </div>
-</nav>
+      <a class="navbar-brand" href="index.html">Blood Donor Finder</a>
+  
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+  
+          <li class="nav-item">
+            <a class="btn btn-outline-primary me-2" href="search.html">Find Donor</a>
+          </li>
+  
+          <li class="nav-item">
+            <a class="btn btn-outline-danger me-2" href="request.html">Post Emergency</a>
+          </li>
+  
+          <li class="nav-item" id="userButtons">
+            <a class="btn btn-dark me-2" href="user-login.html">Login</a>
+          </li>
+  
+          <li class="nav-item d-none" id="userProfile">
+            <span class="me-3 fw-bold" id="usernameDisplay"></span>
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+          </li>
+  
+        </ul>
+      </div>
+  
+    </div>
+  </nav>
+  
 
 <main class="container my-4">
   <h2>Post Emergency Blood Request</h2>
@@ -23,6 +48,7 @@
         <label class="form-label">Patient Name</label>
         <input id="patient_name" class="form-control" required>
       </div>
+    
       <div class="col-md-3">
         <label class="form-label">Blood Group</label>
         <select id="r_blood_group" class="form-select" required>
@@ -33,10 +59,19 @@
           <option>AB+</option><option>AB-</option>
         </select>
       </div>
+    
+      <!-- ★★ REPLACED BLOCK BELOW ★★ -->
       <div class="col-md-3">
         <label class="form-label">Contact Phone</label>
-        <input id="contact_phone" class="form-control" required pattern="[0-9]{10,}">
+        <input id="contact_phone" class="form-control" 
+               required 
+               pattern="[0-9]{10}"
+               maxlength="10"
+               oninput="this.value = this.value.replace(/[^0-9]/g,'')"
+               title="Phone number must be exactly 10 digits">
       </div>
+      <!-- ★★ END OF REPLACEMENT ★★ -->
+    
       <div class="col-md-6">
         <label class="form-label">Hospital</label>
         <input id="hospital" class="form-control" required>
@@ -68,20 +103,51 @@
           el.className = 'card mb-2';
           el.innerHTML = `
             <div class="card-body">
-              <h5 class="card-title">${r.patient_name} needs <span class="badge bg-danger">${r.blood_group}</span></h5>
-              <p class="card-text mb-1"><strong>Hospital:</strong> ${r.hospital}</p>
-              <p class="card-text mb-1"><strong>City:</strong> ${r.city}</p>
-              <p class="card-text mb-1"><strong>Contact:</strong> <a href="tel:${r.contact_phone}">${r.contact_phone}</a></p>
-              <span class="badge ${r.status === 'Pending' ? 'bg-warning text-dark' : 'bg-success'}">${r.status}</span>
-            </div>
-          `;
-          container.appendChild(el);
-        });
+      <h5 class="card-title">${r.patient_name} needs <span class="badge bg-danger">${r.blood_group}</span></h5>
+      <p class="card-text mb-1"><strong>Hospital:</strong> ${r.hospital}</p>
+      <p class="card-text mb-1"><strong>City:</strong> ${r.city}</p>
+      <p class="card-text mb-1"><strong>Contact:</strong> <a href="tel:${r.contact_phone}">${r.contact_phone}</a></p>
+      <span class="badge ${r.status === 'Pending' ? 'bg-warning text-dark' : 'bg-success'}">${r.status}</span>
+
+      <!-- ⭐ ADD THIS BUTTON HERE ⭐ -->
+      ${r.status === 'Pending' ? `
+        <button class="btn btn-success btn-sm mt-2" onclick="updateStatus('${r._id}', 'Completed')">
+          Mark as Completed
+        </button>
+      ` : ''}
+    </div>
+  `;
+  container.appendChild(el);
+});
+
       } else {
         document.getElementById('recentReqs').innerHTML = `<div class="alert alert-secondary">No recent requests.</div>`;
       }
     });
 </script>
 <script src="./js/script.js"></script>
+<script>
+  // Check login on page load
+  async function checkLogin() {
+    const res = await fetch('/api/check-session');
+    const data = await res.json();
+
+    if (data.loggedIn) {
+      document.getElementById("userButtons").classList.add("d-none");
+      document.getElementById("userProfile").classList.remove("d-none");
+
+      document.getElementById("usernameDisplay").innerText =
+        data.isAdmin ? "Admin" : data.user.name;
+    }
+  }
+
+  checkLogin();
+
+  async function logout() {
+    await fetch('/api/logout');
+    window.location.href = "index.html";
+  }
+</script>
+
 </body>
 </html>

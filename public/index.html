@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -8,16 +8,45 @@
   <link href="./css/style.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg bg-light shadow-sm">
-  <div class="container">
-    <a class="navbar-brand" href="index.html">Blood Donor Finder</a>
-    <div>
-      <a class="btn btn-outline-primary me-2" href="register.html">Register as Donor</a>
-      <a class="btn btn-danger me-2" href="search.html">Find Donor</a>
-      <a class="btn btn-dark" href="request.html">Post Emergency</a>
+  <nav class="navbar navbar-expand-lg bg-light shadow-sm">
+    <div class="container">
+  
+      <a class="navbar-brand" href="index.html">Blood Donor Finder</a>
+  
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+  
+          <li class="nav-item">
+            <a class="btn btn-outline-primary me-2" href="search.html">Find Donor</a>
+          </li>
+  
+          <li class="nav-item">
+            <a class="btn btn-outline-danger me-2" href="request.html">Post Emergency</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-outline-dark me-2" href="admin-login.html">Admin Login</a>
+          </li>
+          
+  
+          <!-- Show BEFORE login -->
+          <li class="nav-item" id="userButtons">
+            <a class="btn btn-dark me-2" href="user-login.html">Login</a>
+          </li>
+  
+          <!-- Show AFTER login -->
+          <li class="nav-item d-none" id="userProfile">
+            <span class="me-3 fw-bold text-primary" id="usernameDisplay"></span>
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+          </li>
+  
+        </ul>
+      </div>
+  
     </div>
-  </div>
-</nav>
+  </nav>
+  
+  
+  
 
 <main class="container my-4">
   <div class="hero">
@@ -64,5 +93,29 @@
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
 </script>
+<script>
+  async function checkLogin() {
+    const res = await fetch('/api/check-session');
+    const data = await res.json();
+
+    if (data.loggedIn) {
+      document.getElementById("userButtons").classList.add("d-none");
+      document.getElementById("userProfile").classList.remove("d-none");
+
+      document.getElementById("usernameDisplay").innerText =
+        data.isAdmin ? "Admin" : data.user.name;
+    }
+  }
+
+  checkLogin();
+
+  async function logout() {
+    await fetch('/api/user/logout');
+    await fetch('/api/admin/logout');
+    window.location.href = "index.html";
+  }
+</script>
+
+
 </body>
 </html>

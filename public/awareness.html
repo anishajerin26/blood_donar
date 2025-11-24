@@ -35,24 +35,37 @@
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+<nav class="navbar navbar-expand-lg bg-light shadow-sm">
   <div class="container">
-    <a class="navbar-brand fw-bold text-danger fs-4">Blood Donor Finder</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
 
-    <div id="nav" class="collapse navbar-collapse">
+    <a class="navbar-brand" href="index.html">Blood Donor Finder</a>
+
+    <div class="collapse navbar-collapse">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="search.html">Find Donor</a></li>
-        <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
-        <li class="nav-item"><a class="nav-link" href="request.html">Emergency</a></li>
-        <li class="nav-item"><a class="nav-link active text-danger" href="awareness.html">Blood Info</a></li>
+
+        <li class="nav-item">
+          <a class="btn btn-outline-primary me-2" href="search.html">Find Donor</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="btn btn-outline-danger me-2" href="request.html">Post Emergency</a>
+        </li>
+
+        <li class="nav-item" id="userButtons">
+          <a class="btn btn-dark me-2" href="user-login.html">Login</a>
+        </li>
+
+        <li class="nav-item d-none" id="userProfile">
+          <span class="me-3 fw-bold" id="usernameDisplay"></span>
+          <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </li>
+
       </ul>
     </div>
+
   </div>
 </nav>
+
 
 <div class="container my-5">
 
@@ -103,6 +116,28 @@
 
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+<script>
+  // Check login on page load
+  async function checkLogin() {
+    const res = await fetch('/api/check-session');
+    const data = await res.json();
+
+    if (data.loggedIn) {
+      document.getElementById("userButtons").classList.add("d-none");
+      document.getElementById("userProfile").classList.remove("d-none");
+
+      document.getElementById("usernameDisplay").innerText =
+        data.isAdmin ? "Admin" : data.user.name;
+    }
+  }
+
+  checkLogin();
+
+  async function logout() {
+    await fetch('/api/logout');
+    window.location.href = "index.html";
+  }
 </script>
 
 </body>
